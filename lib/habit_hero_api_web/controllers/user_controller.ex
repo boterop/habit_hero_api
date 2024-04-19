@@ -1,6 +1,7 @@
 defmodule HabitHeroApiWeb.UserController do
   use HabitHeroApiWeb, :controller
 
+  alias HabitHeroApiWeb.Auth.ErrorResponse
   alias HabitHeroApiWeb.Auth.Guardian
   alias HabitHeroApi.Account
   alias HabitHeroApi.Account.User
@@ -40,6 +41,16 @@ defmodule HabitHeroApiWeb.UserController do
 
     with {:ok, %User{}} <- Account.delete_user(user) do
       send_resp(conn, :no_content, "")
+    end
+  end
+
+  def sign_in(conn, %{"email" => email, "password" => password}) do
+    case Guardian.authenticate(email, password) do
+      {:ok, %User{} = user, token} ->
+        render(conn, :show_token, user: user, token: token)
+
+      _ ->
+        raise(ErrorResponse.Unauthorized)
     end
   end
 end
