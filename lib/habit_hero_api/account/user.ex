@@ -19,5 +19,12 @@ defmodule HabitHeroApi.Account.User do
     |> validate_required([:email, :name, :password])
     |> unique_constraint(:name)
     |> unique_constraint(:email)
+    |> password_to_hash()
   end
+
+  defp password_to_hash(%Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset) do
+    change(changeset, password: Bcrypt.hash_pwd_salt(password))
+  end
+
+  defp password_to_hash(changeset), do: changeset
 end
