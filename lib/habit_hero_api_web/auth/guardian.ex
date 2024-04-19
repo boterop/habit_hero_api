@@ -24,15 +24,17 @@ defmodule HabitHeroApiWeb.Auth.Guardian do
     |> validate_user(password)
   end
 
+  def create_token({:ok, user}) do
+    {:ok, token, _claims} = encode_and_sign(user)
+    {:ok, user, token}
+  end
+
+  def create_token(error), do: error
+
   defp validate_user(nil, _password), do: {:error, :invalid_email}
 
   defp validate_user(%{password: password_hash}, password),
     do: Bcrypt.verify_pass(password, password_hash)
-
-  defp create_token({:ok, user}) do
-    {:ok, token, _claims} = encode_and_sign(user)
-    {:ok, user, token}
-  end
 
   defp check_user(nil), do: {:error, :not_found}
   defp check_user(user), do: {:ok, user}

@@ -1,6 +1,7 @@
 defmodule HabitHeroApiWeb.UserController do
   use HabitHeroApiWeb, :controller
 
+  alias HabitHeroApiWeb.Auth.Guardian
   alias HabitHeroApi.Account
   alias HabitHeroApi.Account.User
 
@@ -12,11 +13,12 @@ defmodule HabitHeroApiWeb.UserController do
   end
 
   def create(conn, %{"user" => user_params}) do
-    with {:ok, %User{} = user} <- Account.create_user(user_params) do
+    with {:ok, %User{} = user} <- Account.create_user(user_params),
+         {:ok, _user, token} <- Guardian.create_token({:ok, user}) do
       conn
       |> put_status(:created)
       |> put_resp_header("location", ~p"/api/users/#{user}")
-      |> render(:show, user: user)
+      |> render(:show_token, user: user, token: token)
     end
   end
 
