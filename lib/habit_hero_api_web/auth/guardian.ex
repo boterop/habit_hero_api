@@ -1,13 +1,39 @@
 defmodule HabitHeroApiWeb.Auth.Guardian do
   use Guardian, otp_app: :habit_hero_api
+  alias HabitHeroApi.Account
 
-  def subject_for_token(%{token: token}, _claims) do
-    is_valid? = token == System.get_env("API_KEY")
-    {:ok, is_valid?}
+  def subject_for_token(%{id: id}, _claims) do
+    sub = to_string(id)
+    {:ok, sub}
   end
 
-  def subject_for_token(_, _), do: {:error, :no_token_provided}
+  def subject_for_token(_, _), do: {:error, :no_id_provided}
 
-  def resource_from_claims(%{"is_valid?" => true}), do: {:ok, true}
-  def resource_from_claims(_claims), do: {:error, false}
+  def resource_from_claims(%{"sub" => id}) do
+    id
+    |> Account.get_user!()
+    |> check_user()
+    |> create_token()
+  end
+
+  def resource_from_claims(_claims), do: {:error, :no_id_provided}
+
+  def authenticate(user, password) do
+    user
+    |> Account.get_user_by_email!()
+    |> validate_user(password)
+  end
+
+  defp validate_user(nil, _password), do: {:error, :invalid_email}
+
+  defp validate_user(%{password: password_hash}, password),
+    do: Bcrypt.verify_pass(password, password_hash)
+
+  defp create_token({:ok, user}) do
+    {:ok, token, _claims} = encode_and_sign(user)
+    {:ok, user, token}
+  end
+
+  defp check_user(nil), do: {:error, :not_found}
+  defp check_user(user), do: {:ok, user}
 end
