@@ -1,12 +1,19 @@
 defmodule HabitHeroApiWeb.Router do
   use HabitHeroApiWeb, :router
 
+  @scope "/api"
+
   pipeline :api do
     plug :accepts, ["json"]
   end
 
-  scope "/api", HabitHeroApiWeb do
+  scope @scope, HabitHeroApiWeb do
     pipe_through :api
+  end
+
+  scope "#{@scope}/users", HabitHeroApiWeb do
+    pipe_through :api
+    resources "/", UserController
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

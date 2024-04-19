@@ -19,7 +19,7 @@ defmodule HabitHeroApi.MixProject do
   def application do
     [
       mod: {HabitHeroApi.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :os_mon]
     ]
   end
 
@@ -35,6 +35,7 @@ defmodule HabitHeroApi.MixProject do
       {:phoenix, "~> 1.7.11"},
       {:phoenix_ecto, "~> 4.4"},
       {:ecto_sql, "~> 3.10"},
+      {:ecto_psql_extras, "~> 0.7"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_live_dashboard, "~> 0.8.3"},
       {:swoosh, "~> 1.5"},
