@@ -12,6 +12,7 @@ defmodule HabitHeroApiWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug HabitHeroApiWeb.API.Pipeline
   end
 
   pipeline :auth do

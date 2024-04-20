@@ -11,6 +11,10 @@ config :habit_hero_api, HabitHeroApiWeb.Auth.Guardian,
   issuer: "habit_hero_api",
   secret_key: System.get_env("GUARDIAN_KEY")
 
+config :habit_hero_api, HabitHeroApiWeb.API.Guardian,
+  issuer: "habit_hero_api",
+  secret_key: System.get_env("API_KEY")
+
 config :habit_hero_api,
   ecto_repos: [HabitHeroApi.Repo],
   generators: [timestamp_type: :utc_datetime, binary_id: true]
