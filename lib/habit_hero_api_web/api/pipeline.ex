@@ -5,6 +5,6 @@ defmodule HabitHeroApiWeb.API.Pipeline do
     error_handler: HabitHeroApiWeb.API.GuardianErrorHandler
 
   plug Guardian.Plug.VerifySession
-  plug Guardian.Plug.VerifyHeader
+  plug Guardian.Plug.VerifyHeader, header_name: "api-key", claims: %{"typ" => "access"}
   plug Guardian.Plug.EnsureAuthenticated
 end
