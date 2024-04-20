@@ -1,6 +1,6 @@
 # HabitHeroApi
 
-[[_TOC_]]
+[[__TOC__]]
 
 ## Set up
 
