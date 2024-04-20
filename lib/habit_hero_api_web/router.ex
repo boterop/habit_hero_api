@@ -14,14 +14,23 @@ defmodule HabitHeroApiWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :auth do
+    plug HabitHeroApiWeb.Auth.Pipeline
+  end
+
   scope @scope, HabitHeroApiWeb do
     pipe_through :api
+    post "/sign_in", UserController, :sign_in
+    post "/sign_out", UserController, :create
   end
 
   scope "#{@scope}/users", HabitHeroApiWeb do
-    pipe_through :api
+    pipe_through [:api, :auth]
     resources "/", UserController
-    post "/login", UserController, :sign_in
+  end
+
+  scope "#{@scope}/habits", HabitHeroApiWeb do
+    pipe_through [:api, :auth]
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

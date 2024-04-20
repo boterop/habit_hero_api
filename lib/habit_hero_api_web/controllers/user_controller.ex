@@ -1,10 +1,9 @@
 defmodule HabitHeroApiWeb.UserController do
   use HabitHeroApiWeb, :controller
 
-  alias HabitHeroApiWeb.Auth.ErrorResponse
-  alias HabitHeroApiWeb.Auth.Guardian
   alias HabitHeroApi.Account
   alias HabitHeroApi.Account.User
+  alias HabitHeroApiWeb.Auth.{ErrorResponse, Guardian}
 
   action_fallback HabitHeroApiWeb.FallbackController
 
@@ -15,7 +14,7 @@ defmodule HabitHeroApiWeb.UserController do
 
   def create(conn, %{"user" => user_params}) do
     with {:ok, %User{} = user} <- Account.create_user(user_params),
-         {:ok, _user, token} <- Guardian.create_token({:ok, user}) do
+         {:ok, _user, token} <- Guardian.create_token(user) do
       conn
       |> put_status(:created)
       |> put_resp_header("location", ~p"/api/users/#{user}")
@@ -47,9 +46,11 @@ defmodule HabitHeroApiWeb.UserController do
   def sign_in(conn, %{"email" => email, "password" => password}) do
     case Guardian.authenticate(email, password) do
       {:ok, %User{} = user, token} ->
-        render(conn, :show_token, user: user, token: token)
+        conn
+        |> put_status(:ok)
+        |> render(:show_token, user: user, token: token)
 
-      _ ->
+      _error ->
         raise(ErrorResponse.Unauthorized)
     end
   end
