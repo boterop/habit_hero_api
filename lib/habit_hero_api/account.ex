@@ -38,6 +38,26 @@ defmodule HabitHeroApi.Account do
   def get_user!(id), do: Repo.get!(User, id)
 
   @doc """
+  Gets a single user by email.
+
+  Raises `Ecto.NoResultsError` if the User does not exist.
+
+  ## Examples
+
+      iex> get_user_by_email!("jhon@gmail.com")
+      %User{}
+
+      iex> get_user_by_email!("nonexistinguser@gmail.com")
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_user_by_email!(email) do
+    User
+    |> where(email: ^email)
+    |> Repo.one()
+  end
+
+  @doc """
   Creates a user.
 
   ## Examples

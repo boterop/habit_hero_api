@@ -43,9 +43,11 @@ defmodule HabitHeroApi.MixProject do
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.20"},
+      {:guardian, "~> 2.3"},
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
-      {:bandit, "~> 1.2"}
+      {:bandit, "~> 1.2"},
+      {:bcrypt_elixir, "~> 3.1"}
     ]
   end
 
