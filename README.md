@@ -1,5 +1,9 @@
 # HabitHeroApi
 
+[[_TOC_]]
+
+## Set up
+
 To start your Phoenix server:
 
 - Create _.env_ file from _.env.example_
@@ -16,7 +20,7 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 
 ### How to use
 
-After setting up you'll need to create an Api-Key, run into the root folder `iex -S mix phx.server` and then
+After [setting up the project](#set-up) you'll need to create an Api-Key, run into the root folder `iex -S mix phx.server` and then
 
 ```elixir
 HabitHeroApiWeb.API.Guardian.create_token(%{name: "client_name"})
