@@ -1,7 +1,5 @@
 # HabitHeroApi
 
-[[__TOC__]]
-
 ## Set up
 
 To start your Phoenix server:
