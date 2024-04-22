@@ -34,6 +34,11 @@ defmodule HabitHeroApiWeb.Router do
     pipe_through [:api, :auth]
   end
 
+  scope "#{@scope}/health", HabitHeroApiWeb do
+    pipe_through :api
+    get "/", APIController, :health
+  end
+
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:habit_hero_api, :dev_routes) do
     # If you want to use the LiveDashboard in production, you should put
