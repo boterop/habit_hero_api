@@ -22,7 +22,7 @@ defmodule HabitHeroApiWeb.Router do
   scope @scope, HabitHeroApiWeb do
     pipe_through :api
     post "/sign_in", UserController, :sign_in
-    post "/sign_out", UserController, :create
+    post "/sign_up", UserController, :create
   end
 
   scope "#{@scope}/users", HabitHeroApiWeb do
