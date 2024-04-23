@@ -21,8 +21,11 @@ if System.get_env("PHX_SERVER") do
 end
 
 if config_env() == :prod do
+  user_info = "#{System.get_env("DB_USER")}:#{System.get_env("DB_PASSWORD")}"
+  database_info = "#{System.get_env("DB_HOST")}/#{System.get_env("DB_DATABASE")}"
+
   database_url =
-    System.get_env("DATABASE_URL") ||
+    "ecto://#{user_info}@#{database_info}" ||
       raise """
       environment variable DATABASE_URL is missing.
       For example: ecto://USER:PASS@HOST/DATABASE

@@ -22,7 +22,7 @@ defmodule HabitHeroApiWeb.Router do
   scope @scope, HabitHeroApiWeb do
     pipe_through :api
     post "/sign_in", UserController, :sign_in
-    post "/sign_out", UserController, :create
+    post "/sign_up", UserController, :create
   end
 
   scope "#{@scope}/users", HabitHeroApiWeb do
@@ -32,6 +32,11 @@ defmodule HabitHeroApiWeb.Router do
 
   scope "#{@scope}/habits", HabitHeroApiWeb do
     pipe_through [:api, :auth]
+  end
+
+  scope "#{@scope}/health", HabitHeroApiWeb do
+    pipe_through :api
+    get "/", APIController, :health
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
