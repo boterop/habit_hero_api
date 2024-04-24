@@ -32,6 +32,7 @@ defmodule HabitHeroApiWeb.Router do
 
   scope "#{@scope}/habits", HabitHeroApiWeb do
     pipe_through [:api, :auth]
+    resources "/", HabitController
   end
 
   scope "#{@scope}/health", HabitHeroApiWeb do
