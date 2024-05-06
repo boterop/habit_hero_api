@@ -22,6 +22,21 @@ defmodule HabitHeroApi.Habits do
   end
 
   @doc """
+  Returns the list of habits.
+
+  ## Examples
+
+      iex> list_habits()
+      [%Habit{}, ...]
+
+  """
+  def list_user_habits(user_id) do
+    User
+    |> where(user_id: ^user_id)
+    |> Repo.all()
+  end
+
+  @doc """
   Gets a single habit.
 
   Raises `Ecto.NoResultsError` if the Habit does not exist.
