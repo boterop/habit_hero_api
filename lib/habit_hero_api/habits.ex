@@ -22,17 +22,17 @@ defmodule HabitHeroApi.Habits do
   end
 
   @doc """
-  Returns the list of habits.
+  Returns the list of habits from inserted user.
 
   ## Examples
 
-      iex> list_habits()
+      iex> list_user_habits()
       [%Habit{}, ...]
 
   """
   def list_user_habits(user_id) do
-    User
-    |> where(user_id: ^user_id)
+    Habit
+    |> where([habit], habit.user_id == ^user_id)
     |> Repo.all()
   end
 

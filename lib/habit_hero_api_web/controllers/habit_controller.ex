@@ -25,6 +25,11 @@ defmodule HabitHeroApiWeb.HabitController do
     render(conn, :show, habit: habit)
   end
 
+  def show_by_user(conn, %{"user_id" => user_id}) do
+    habits = Habits.list_user_habits(user_id)
+    render(conn, :index, habits: habits)
+  end
+
   def update(conn, %{"id" => id, "habit" => habit_params}) do
     habit = Habits.get_habit!(id)
 

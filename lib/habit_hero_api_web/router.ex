@@ -10,6 +10,12 @@ defmodule HabitHeroApiWeb.Router do
     |> halt()
   end
 
+  def handle_errors(conn, _error) do
+    conn
+    |> json(%{errors: "Unknown error"})
+    |> halt()
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
     plug HabitHeroApiWeb.API.Pipeline
@@ -28,6 +34,8 @@ defmodule HabitHeroApiWeb.Router do
 
   scope "#{@scope}/users", HabitHeroApiWeb do
     pipe_through [:api, :auth]
+
+    get "/:user_id/habits", HabitController, :show_by_user
     resources "/", UserController
   end
 

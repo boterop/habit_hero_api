@@ -17,10 +17,10 @@ defmodule HabitHeroApiWeb.UserJSON do
 
   defp data(user, token \\ nil)
 
-  defp data(%User{email: email, name: name}, token) do
+  defp data(%User{id: id, email: email}, token) do
     data = %{
-      email: email,
-      name: name
+      id: id,
+      email: email
     }
 
     if token, do: Map.merge(data, %{token: token}), else: data

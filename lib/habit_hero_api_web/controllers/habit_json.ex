@@ -29,7 +29,8 @@ defmodule HabitHeroApiWeb.HabitJSON do
       done_image: habit.done_image,
       done_today: habit.done_today,
       times_done: habit.times_done,
-      status: habit.status
+      status: habit.status,
+      user_id: habit.user_id
     }
   end
 end

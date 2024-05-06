@@ -24,7 +24,7 @@ defmodule HabitHeroApi.Habits.Habit do
 
   @doc false
   @optionals ~w[done_image]a
-  @required ~w[name description difficulty type order_index notification_date notify end_date done_today times_done status]a
+  @required ~w[name description difficulty type order_index notification_date notify end_date done_today times_done status user_id]a
   def changeset(habit, attrs) do
     habit
     |> cast(attrs, @optionals ++ @required)
