@@ -3,11 +3,14 @@ defmodule HabitHeroApi.HabitsFixtures do
   This module defines test helpers for creating
   entities via the `HabitHeroApi.Habits` context.
   """
+  import HabitHeroApi.AccountFixtures
 
   @doc """
   Generate a habit.
   """
   def habit_fixture(attrs \\ %{}) do
+    %{id: user_id} = user_fixture()
+
     {:ok, habit} =
       attrs
       |> Enum.into(%{
@@ -22,7 +25,8 @@ defmodule HabitHeroApi.HabitsFixtures do
         order_index: 42,
         status: :done,
         times_done: 42,
-        type: :good
+        type: :good,
+        user_id: user_id
       })
       |> HabitHeroApi.Habits.create_habit()
 
