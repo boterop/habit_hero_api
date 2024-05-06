@@ -6,7 +6,6 @@ defmodule HabitHeroApi.Account.User do
   @foreign_key_type :binary_id
   schema "users" do
     field :email, :string
-    field :name, :string
     field :password, :string
 
     timestamps(type: :utc_datetime)
@@ -15,9 +14,8 @@ defmodule HabitHeroApi.Account.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:email, :name, :password])
-    |> validate_required([:email, :name, :password])
-    |> unique_constraint(:name)
+    |> cast(attrs, [:email, :password])
+    |> validate_required([:email, :password])
     |> unique_constraint(:email)
     |> password_to_hash()
   end

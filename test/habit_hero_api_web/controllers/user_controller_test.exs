@@ -7,40 +7,49 @@ defmodule HabitHeroApiWeb.UserControllerTest do
 
   @create_attrs %{
     email: "some email",
-    name: "some name",
     password: "some password"
   }
   @update_attrs %{
     email: "some updated email",
-    name: "some updated name",
     password: "some updated password"
   }
   @invalid_attrs %{email: nil, name: nil, password: nil}
 
   setup %{conn: conn} do
-    {:ok, conn: put_req_header(conn, "accept", "application/json")}
+    api_key = "test_api_key"
+    {:ok, user, user_token} = user_fixture() |> HabitHeroApiWeb.Auth.Guardian.create_token()
+
+    conn =
+      conn
+      |> put_req_header("accept", "application/json")
+      |> put_req_header("api-key", "Bearer #{api_key}")
+      |> put_req_header("authentication", "Bearer #{user_token}")
+
+    {:ok, conn: conn, user: user}
   end
 
   describe "index" do
-    test "lists all users", %{conn: conn} do
+    test "lists all users", %{conn: conn, user: %User{id: user_id, email: user_email}} do
       conn = get(conn, ~p"/api/users")
-      assert json_response(conn, 200)["data"] == []
+      [%{"id" => ^user_id, "email" => ^user_email}] = json_response(conn, 200)["data"]
     end
   end
 
   describe "create user" do
     test "renders user when data is valid", %{conn: conn} do
-      conn = post(conn, ~p"/api/users", user: @create_attrs)
-      assert %{"id" => id} = json_response(conn, 201)["data"]
+      %{"data" => %{"id" => id}} =
+        conn
+        |> post(~p"/api/users", user: @create_attrs)
+        |> json_response(201)
 
-      conn = get(conn, ~p"/api/users/#{id}")
+      %{email: email} = @create_attrs
 
-      assert %{
-               "id" => ^id,
-               "email" => "some email",
-               "name" => "some name",
-               "password" => "some password"
-             } = json_response(conn, 200)["data"]
+      %{
+        "data" => %{
+          "id" => ^id,
+          "email" => ^email
+        }
+      } = conn |> get(~p"/api/users/#{id}") |> json_response(200)
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -50,20 +59,21 @@ defmodule HabitHeroApiWeb.UserControllerTest do
   end
 
   describe "update user" do
-    setup [:create_user]
-
     test "renders user when data is valid", %{conn: conn, user: %User{id: id} = user} do
-      conn = put(conn, ~p"/api/users/#{user}", user: @update_attrs)
-      assert %{"id" => ^id} = json_response(conn, 200)["data"]
+      %{"data" => %{"id" => ^id}} =
+        conn
+        |> put(~p"/api/users/#{user}", user: @update_attrs)
+        |> json_response(200)
 
-      conn = get(conn, ~p"/api/users/#{id}")
-
-      assert %{
-               "id" => ^id,
-               "email" => "some updated email",
-               "name" => "some updated name",
-               "password" => "some updated password"
-             } = json_response(conn, 200)["data"]
+      %{
+        "data" => %{
+          "id" => ^id,
+          "email" => "some updated email"
+        }
+      } =
+        conn
+        |> get(~p"/api/users/#{id}")
+        |> json_response(200)
     end
 
     test "renders errors when data is invalid", %{conn: conn, user: user} do
@@ -73,20 +83,12 @@ defmodule HabitHeroApiWeb.UserControllerTest do
   end
 
   describe "delete user" do
-    setup [:create_user]
-
-    test "deletes chosen user", %{conn: conn, user: user} do
-      conn = delete(conn, ~p"/api/users/#{user}")
-      assert response(conn, 204)
+    test "deletes chosen user", %{conn: conn, user: %User{id: user_id}} do
+      assert conn |> delete(~p"/api/users/#{user_id}") |> response(204)
 
       assert_error_sent 404, fn ->
-        get(conn, ~p"/api/users/#{user}")
+        get(conn, ~p"/api/users/#{user_id}")
       end
     end
-  end
-
-  defp create_user(_) do
-    user = user_fixture()
-    %{user: user}
   end
 end
