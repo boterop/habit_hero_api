@@ -2,6 +2,9 @@ defmodule HabitHeroApiWeb.API.Pipeline do
   import Plug.Conn
 
   @type connection :: Plug.Conn.t()
+  @key if System.get_env("MIX_ENV") == "prod",
+         do: System.get_env("API_KEY"),
+         else: System.get_env("TEST_API_KEY")
 
   def init(options), do: options
 
@@ -13,8 +16,8 @@ defmodule HabitHeroApiWeb.API.Pipeline do
     |> check_is_valid(conn)
   end
 
-  @spec is_a_valid_key?(key :: String.t()) :: boolean()
-  defp is_a_valid_key?(["Bearer " <> key]), do: Bcrypt.verify_pass(key, System.get_env("API_KEY"))
+  @spec is_a_valid_key?(key :: list(String.t())) :: boolean()
+  defp is_a_valid_key?(["Bearer " <> key]), do: Bcrypt.verify_pass(key, @key)
   defp is_a_valid_key?(_key), do: false
 
   @spec check_is_valid(boolean(), conn :: connection()) :: connection()
