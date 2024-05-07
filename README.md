@@ -1,3 +1,5 @@
+[![Coverage Status](https://coveralls.io/repos/github/boterop/habit_hero_api/badge.svg?branch=main)](https://coveralls.io/github/boterop/habit_hero_api?branch=main)
+
 # HabitHeroApi
 
 ## Set up
