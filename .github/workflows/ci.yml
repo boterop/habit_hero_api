@@ -1,8 +1,11 @@
 name: CI
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
-    types: [closed, review_requested, ready_for_review, synchronize, opened]
+    types: [reopened, ready_for_review, synchronize, opened]
 
 permissions:
   contents: read
@@ -96,8 +99,13 @@ jobs:
           DB_USER: postgres
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
-      - name: Save coverage envs
+      - name: Save coverage envs for pull_request event
+        if: github.event_name == 'pull_request'
         run: echo "BUILD_NUMBER=${{ github.event.pull_request.head.sha }}-PR-${{ github.event.pull_request.number }}" >> $GITHUB_ENV
+
+      - name: Save coverage envs for push event
+        if: github.event_name == 'push'
+        run: echo "BUILD_NUMBER=${{ github.sha }}" >> $GITHUB_ENV
 
       - name: Publish coverage
         env:
