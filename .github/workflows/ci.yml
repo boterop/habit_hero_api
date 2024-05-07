@@ -48,6 +48,7 @@ jobs:
             coveralls.io:443
             github.com:443
             repo.hex.pm:443
+            builds.hex.pm:443
 
       - uses: actions/checkout@v4
 
