@@ -25,6 +25,7 @@ erl_crash.dump
 # Ignore package tarball (built via "mix hex.build").
 habit_hero_api-*.tar
 
-.env
+.env*
+!*.example
 
 plts/
