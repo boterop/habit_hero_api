@@ -1,4 +1,8 @@
 defmodule HabitHeroApi.Account.User do
+  @moduledoc """
+  Module for defining the schema for the 'users' table.
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
 
