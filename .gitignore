@@ -26,3 +26,5 @@ erl_crash.dump
 habit_hero_api-*.tar
 
 .env
+
+plts/
