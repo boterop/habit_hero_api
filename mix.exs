@@ -47,7 +47,9 @@ defmodule HabitHeroApi.MixProject do
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.2"},
-      {:bcrypt_elixir, "~> 3.1"}
+      {:bcrypt_elixir, "~> 3.1"},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false}
     ]
   end
 
