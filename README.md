@@ -1,3 +1,5 @@
+[![Coverage Status](https://coveralls.io/repos/github/boterop/habit_hero_api/badge.svg?branch=main)](https://coveralls.io/github/boterop/habit_hero_api?branch=main)
+
 # HabitHeroApi
 
 ## Set up
@@ -39,6 +41,10 @@ headers = {
   "Authorization": "Bearer #{user_token}"
 }
 ```
+
+## Editing
+
+To create a new schema with endpoints run `mix phx.gen.json Accounts User users name:string age:integer` changing <Accounts> <User> <users> [more info](https://hexdocs.pm/phoenix/Mix.Tasks.Phx.Gen.Json.html)
 
 ## Learn more
 

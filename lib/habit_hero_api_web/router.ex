@@ -10,6 +10,12 @@ defmodule HabitHeroApiWeb.Router do
     |> halt()
   end
 
+  def handle_errors(conn, _error) do
+    conn
+    |> json(%{errors: "Unknown error"})
+    |> halt()
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
     plug HabitHeroApiWeb.API.Pipeline
@@ -21,22 +27,21 @@ defmodule HabitHeroApiWeb.Router do
 
   scope @scope, HabitHeroApiWeb do
     pipe_through :api
+    get "/health", APIController, :health
     post "/sign_in", UserController, :sign_in
     post "/sign_up", UserController, :create
   end
 
   scope "#{@scope}/users", HabitHeroApiWeb do
     pipe_through [:api, :auth]
+
+    get "/:user_id/habits", HabitController, :show_by_user
     resources "/", UserController
   end
 
   scope "#{@scope}/habits", HabitHeroApiWeb do
     pipe_through [:api, :auth]
-  end
-
-  scope "#{@scope}/health", HabitHeroApiWeb do
-    pipe_through :api
-    get "/", APIController, :health
+    resources "/", HabitController
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
