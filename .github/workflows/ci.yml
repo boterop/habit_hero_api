@@ -96,5 +96,12 @@ jobs:
           DB_USER: postgres
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
-      - name: Coveralls GitHub Action
-        uses: coverallsapp/github-action@v2
+      - name: Save coverage envs
+        run: echo "BUILD_NUMBER=${{ github.event.pull_request.head.sha }}-PR-${{ github.event.pull_request.number }}" >> $GITHUB_ENV
+
+      - name: Publish coverage
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BUILD_NUMBER: ${{ env.BUILD_NUMBER }}
+        run: |
+          curl -k "https://coveralls.io/webhook" -d "repo_token=$GITHUB_TOKEN&repo_name=$GITHUB_REPOSITORY&payload[build_num]=$BUILD_NUMBER&payload[status]=done"
