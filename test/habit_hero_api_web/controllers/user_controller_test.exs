@@ -1,9 +1,10 @@
 defmodule HabitHeroApiWeb.UserControllerTest do
   use HabitHeroApiWeb.ConnCase
 
-  import HabitHeroApi.AccountFixtures
-
   alias HabitHeroApi.Account.User
+  alias HabitHeroApiWeb.Auth.Guardian
+
+  import HabitHeroApi.AccountFixtures
 
   @create_attrs %{
     email: "some email",
@@ -17,7 +18,7 @@ defmodule HabitHeroApiWeb.UserControllerTest do
 
   setup %{conn: conn} do
     api_key = "test_api_key"
-    {:ok, user, user_token} = user_fixture() |> HabitHeroApiWeb.Auth.Guardian.create_token()
+    {:ok, user, user_token} = user_fixture() |> Guardian.create_token()
 
     conn =
       conn

@@ -1,4 +1,8 @@
 defmodule HabitHeroApiWeb.Auth.Guardian do
+  @moduledoc """
+  Guardian module for authentication in the HabitHeroApiWeb application.
+  """
+
   use Guardian, otp_app: :habit_hero_api
   alias HabitHeroApi.{Account, Account.User}
 

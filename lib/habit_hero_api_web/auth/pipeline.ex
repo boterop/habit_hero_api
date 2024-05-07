@@ -1,4 +1,8 @@
 defmodule HabitHeroApiWeb.Auth.Pipeline do
+  @moduledoc """
+  Pipeline module for Guardian authentication in the HabitHeroApiWeb application.
+  """
+
   use Guardian.Plug.Pipeline,
     otp_app: :habit_hero_api,
     module: HabitHeroApiWeb.Auth.Guardian,
