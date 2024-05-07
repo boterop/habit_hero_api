@@ -94,7 +94,6 @@ jobs:
       - name: Run Tests and Coverage
         run: mix coveralls.github --parallel --flagname otp-${{ matrix.otp }}-elixir-${{ matrix.elixir }}
         env:
-          MIX_ENV: test
           DB_HOST: localhost
           DB_TEST_DATABASE: habit_hero_test
           DB_USER: postgres
