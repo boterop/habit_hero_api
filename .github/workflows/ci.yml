@@ -95,3 +95,6 @@ jobs:
           DB_TEST_DATABASE: habit_hero_test
           DB_USER: postgres
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+
+      - name: Coveralls GitHub Action
+        uses: coverallsapp/github-action@v2
