@@ -61,7 +61,8 @@ defmodule HabitHeroApi.MixProject do
       {:bcrypt_elixir, "~> 3.1"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
-      {:excoveralls, "~> 0.18.1", only: :test}
+      {:excoveralls, "~> 0.18.1", only: :test},
+      {:mock, "~> 0.3.8", only: :test}
     ]
   end
 
