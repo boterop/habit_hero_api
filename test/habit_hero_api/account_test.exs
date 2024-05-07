@@ -8,7 +8,7 @@ defmodule HabitHeroApi.AccountTest do
 
     import HabitHeroApi.AccountFixtures
 
-    @invalid_attrs %{email: nil, name: nil, password: nil}
+    @invalid_attrs %{email: nil, password: nil}
 
     test "list_users/0 returns all users" do
       user = user_fixture()
@@ -16,17 +16,18 @@ defmodule HabitHeroApi.AccountTest do
     end
 
     test "get_user!/1 returns the user with given id" do
-      user = user_fixture()
-      assert Account.get_user!(user.id) == user
+      %User{id: user_id} = user_fixture()
+      %User{id: ^user_id} = Account.get_user!(user_id)
     end
 
     test "create_user/1 with valid data creates a user" do
-      valid_attrs = %{email: "some email", name: "some name", password: "some password"}
+      email = "some email"
+      password = "some password"
+      valid_attrs = %{email: email, password: password}
 
-      assert {:ok, %User{} = user} = Account.create_user(valid_attrs)
-      assert user.email == "some email"
-      assert user.name == "some name"
-      assert user.password == "some password"
+      {:ok, %User{email: ^email, password: user_password}} = Account.create_user(valid_attrs)
+
+      assert Bcrypt.verify_pass(password, user_password)
     end
 
     test "create_user/1 with invalid data returns error changeset" do
@@ -35,24 +36,24 @@ defmodule HabitHeroApi.AccountTest do
 
     test "update_user/2 with valid data updates the user" do
       user = user_fixture()
-      update_attrs = %{email: "some updated email", name: "some updated name", password: "some updated password"}
+      email = "some updated email"
+      password = "some updated password"
+      update_attrs = %{email: email, password: password}
 
-      assert {:ok, %User{} = user} = Account.update_user(user, update_attrs)
-      assert user.email == "some updated email"
-      assert user.name == "some updated name"
-      assert user.password == "some updated password"
+      {:ok, %User{email: ^email} = user} = Account.update_user(user, update_attrs)
+      assert Bcrypt.verify_pass(password, user.password)
     end
 
     test "update_user/2 with invalid data returns error changeset" do
-      user = user_fixture()
+      %User{id: user_id} = user = user_fixture()
       assert {:error, %Ecto.Changeset{}} = Account.update_user(user, @invalid_attrs)
-      assert user == Account.get_user!(user.id)
+      assert user == Account.get_user!(user_id)
     end
 
     test "delete_user/1 deletes the user" do
-      user = user_fixture()
-      assert {:ok, %User{}} = Account.delete_user(user)
-      assert_raise Ecto.NoResultsError, fn -> Account.get_user!(user.id) end
+      %User{id: user_id} = user = user_fixture()
+      {:ok, %User{id: ^user_id}} = Account.delete_user(user)
+      assert_raise Ecto.NoResultsError, fn -> Account.get_user!(user_id) end
     end
 
     test "change_user/1 returns a user changeset" do
