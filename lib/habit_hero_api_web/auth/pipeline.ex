@@ -4,7 +4,7 @@ defmodule HabitHeroApiWeb.Auth.Pipeline do
     module: HabitHeroApiWeb.Auth.Guardian,
     error_handler: HabitHeroApiWeb.Auth.GuardianErrorHandler
 
-  plug Guardian.Plug.VerifySession
-  plug Guardian.Plug.VerifyHeader
-  plug Guardian.Plug.EnsureAuthenticated
+  plug Guardian.Plug.VerifyHeader, header_name: "authentication"
+  plug Guardian.Plug.EnsureAuthenticated, claims: %{"typ" => "access"}
+  plug Guardian.Plug.LoadResource, allow_blank: true
 end

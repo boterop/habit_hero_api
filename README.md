@@ -40,6 +40,10 @@ headers = {
 }
 ```
 
+## Editing
+
+To create a new schema with endpoints run `mix phx.gen.json Accounts User users name:string age:integer` changing <Accounts> <User> <users> [more info](https://hexdocs.pm/phoenix/Mix.Tasks.Phx.Gen.Json.html)
+
 ## Learn more
 
 - Official website: https://www.phoenixframework.org/

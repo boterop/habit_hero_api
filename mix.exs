@@ -19,7 +19,7 @@ defmodule HabitHeroApi.MixProject do
   def application do
     [
       mod: {HabitHeroApi.Application, []},
-      extra_applications: [:logger, :runtime_tools, :os_mon]
+      extra_applications: [:logger, :runtime_tools, :os_mon, :guardian]
     ]
   end
 
