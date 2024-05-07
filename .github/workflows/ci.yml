@@ -22,8 +22,8 @@ jobs:
     env:
       MIX_ENV: test
     steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@18bf8ad2ca49c14cbb28b91346d626ccfb00c518
+      - name: Check vulnerabilities
+        uses: step-security/harden-runner@v2
         with:
           disable-sudo: true
           egress-policy: block
@@ -32,15 +32,15 @@ jobs:
             github.com:443
             repo.hex.pm:443
 
-      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+      - uses: actions/checkout@v4
 
-      - uses: erlef/setup-beam@e3f6ffe2878180f57318bf13febd3933ee81f664
+      - uses: erlef/setup-beam@v1
         id: beam
         with:
           otp-version: "25"
           elixir-version: "1.14.4"
 
-      - uses: actions/cache@627f0f41f6904a5b1efbaed9f96d9eb58e92e920
+      - uses: actions/cache@v4
         with:
           path: deps
           key: ${{ runner.os }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
@@ -57,7 +57,7 @@ jobs:
         run: mix credo --strict
 
       - name: Restore PLT cache
-        uses: actions/cache@627f0f41f6904a5b1efbaed9f96d9eb58e92e920
+        uses: actions/cache@v4
         id: plt_cache
         with:
           key: |
