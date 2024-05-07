@@ -1,12 +1,8 @@
 name: CI
 
 on:
-  push:
-    branches:
-      - main
-      - development
   pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
+    types: [closed, review_requested, ready_for_review, synchronize, opened]
 
 permissions:
   contents: read
