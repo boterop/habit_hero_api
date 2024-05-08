@@ -14,14 +14,19 @@ defmodule HabitHeroApiWeb.Auth.Guardian do
   def subject_for_token(_, _), do: {:error, :no_id_provided}
 
   def resource_from_claims(%{"sub" => id}) do
-    id
-    |> Account.get_user!()
+    try do
+      Account.get_user!(id)
+    rescue
+      _error -> nil
+    end
     |> check_user()
     |> create_token()
   end
 
   def resource_from_claims(_claims), do: {:error, :no_id_provided}
 
+  @spec authenticate(email :: String.t(), password :: String.t()) ::
+          {:ok, User.t(), String.t()} | false
   def authenticate(email, password) do
     with %User{} = user <- Account.get_user_by_email!(email),
          true <- validate_user(user, password) do
@@ -29,6 +34,7 @@ defmodule HabitHeroApiWeb.Auth.Guardian do
     end
   end
 
+  @spec create_token(user :: User.t()) :: {:ok, User.t(), String.t()}
   def create_token(%User{} = user) do
     {:ok, token, _claims} = encode_and_sign(user)
     {:ok, user, token}

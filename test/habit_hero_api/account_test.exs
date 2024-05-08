@@ -20,6 +20,11 @@ defmodule HabitHeroApi.AccountTest do
       %User{id: ^user_id} = Account.get_user!(user_id)
     end
 
+    test "get_user_by_email!/1 returns the user with given email" do
+      %User{id: user_id, email: email} = user_fixture()
+      %User{id: ^user_id} = Account.get_user_by_email!(email)
+    end
+
     test "create_user/1 with valid data creates a user" do
       email = "some email"
       password = "some password"
