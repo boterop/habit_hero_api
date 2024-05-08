@@ -92,4 +92,21 @@ defmodule HabitHeroApiWeb.UserControllerTest do
       end
     end
   end
+
+  describe "authenticate" do
+    test "sign in", %{conn: conn, user: %User{id: user_id, email: email}} do
+      %{"data" => %{"id" => ^user_id, "token" => token}} =
+        conn
+        |> post(~p"/api/sign-in", email: email, password: "some password")
+        |> json_response(200)
+
+      assert is_binary(token)
+    end
+
+    test "sign in with invalid password", %{conn: conn, user: %User{email: email}} do
+      assert_error_sent 401, fn ->
+        post(conn, ~p"/api/sign-in", email: email, password: "wrong password")
+      end
+    end
+  end
 end
