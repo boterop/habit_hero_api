@@ -71,6 +71,15 @@ defmodule HabitHeroApiWeb.HabitControllerTest do
         |> get(~p"/api/habits")
         |> json_response(200)
     end
+
+    test "lists habits user", %{conn: conn} do
+      %{id: habit_id, user_id: user_id} = habit_fixture()
+
+      %{"data" => [%{"id" => ^habit_id}]} =
+        conn
+        |> get("/api/users/#{user_id}/habits")
+        |> json_response(200)
+    end
   end
 
   describe "create habit" do
