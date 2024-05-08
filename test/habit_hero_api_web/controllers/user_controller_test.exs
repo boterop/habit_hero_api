@@ -53,6 +53,22 @@ defmodule HabitHeroApiWeb.UserControllerTest do
       } = conn |> get(~p"/api/users/#{id}") |> json_response(200)
     end
 
+    test "create user when data is valid", %{conn: conn} do
+      %{"data" => %{"id" => id}} =
+        conn
+        |> post(~p"/api/sign-up", user: @create_attrs)
+        |> json_response(201)
+
+      %{email: email} = @create_attrs
+
+      %{
+        "data" => %{
+          "id" => ^id,
+          "email" => ^email
+        }
+      } = conn |> get(~p"/api/users/#{id}") |> json_response(200)
+    end
+
     test "renders errors when data is invalid", %{conn: conn} do
       conn = post(conn, ~p"/api/users", user: @invalid_attrs)
       assert json_response(conn, 422)["errors"] != %{}
