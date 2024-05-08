@@ -33,8 +33,8 @@ defmodule HabitHeroApi.HabitsTest do
 
     test "list_user_habits/1 returns all user habits" do
       %User{id: user_id} = user_fixture()
-      habit = habit_fixture(user_id: user_id)
-      assert Habits.list_habits() == [habit]
+      %Habit{id: habit_id, user_id: ^user_id} = habit_fixture(user_id: user_id)
+      [%Habit{id: ^habit_id, user_id: ^user_id}] = Habits.list_user_habits(user_id)
     end
 
     test "get_habit!/1 returns the habit with given id" do
