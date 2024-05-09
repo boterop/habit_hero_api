@@ -23,7 +23,7 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 After [setting up the project](#set-up) you'll need to create an Api-Key, run into the root folder `iex -S mix phx.server` and then
 
 ```elixir
-HabitHeroApiWeb.API.gen_hash("api password")
+Bcrypt.hash_pwd_salt("api password")
 ```
 
 use the hash in API_KEY into .env and password token in the header Api-Key
