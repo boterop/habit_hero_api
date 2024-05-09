@@ -3,6 +3,8 @@ defmodule HabitHeroApiWeb.API.Pipeline do
   This module defines a pipeline for authenticating API requests based on an API key.
   """
 
+  alias HabitHeroApiWeb.API.ErrorResponse.InvalidKey
+
   import Plug.Conn
 
   @type connection :: Plug.Conn.t()
@@ -31,5 +33,5 @@ defmodule HabitHeroApiWeb.API.Pipeline do
 
   @spec check_is_valid(boolean(), conn :: connection()) :: connection()
   defp check_is_valid(true, conn), do: conn
-  defp check_is_valid(false, _conn), do: raise("Invalid API key")
+  defp check_is_valid(false, _conn), do: raise(InvalidKey)
 end

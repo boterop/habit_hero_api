@@ -53,6 +53,22 @@ defmodule HabitHeroApiWeb.UserControllerTest do
       } = conn |> get(~p"/api/users/#{id}") |> json_response(200)
     end
 
+    test "create user when data is valid", %{conn: conn} do
+      %{"data" => %{"id" => id}} =
+        conn
+        |> post(~p"/api/sign-up", user: @create_attrs)
+        |> json_response(201)
+
+      %{email: email} = @create_attrs
+
+      %{
+        "data" => %{
+          "id" => ^id,
+          "email" => ^email
+        }
+      } = conn |> get(~p"/api/users/#{id}") |> json_response(200)
+    end
+
     test "renders errors when data is invalid", %{conn: conn} do
       conn = post(conn, ~p"/api/users", user: @invalid_attrs)
       assert json_response(conn, 422)["errors"] != %{}
@@ -89,6 +105,23 @@ defmodule HabitHeroApiWeb.UserControllerTest do
 
       assert_error_sent 404, fn ->
         get(conn, ~p"/api/users/#{user_id}")
+      end
+    end
+  end
+
+  describe "authenticate" do
+    test "sign in", %{conn: conn, user: %User{id: user_id, email: email}} do
+      %{"data" => %{"id" => ^user_id, "token" => token}} =
+        conn
+        |> post(~p"/api/sign-in", email: email, password: "some password")
+        |> json_response(200)
+
+      assert is_binary(token)
+    end
+
+    test "sign in with invalid password", %{conn: conn, user: %User{email: email}} do
+      assert_error_sent 401, fn ->
+        post(conn, ~p"/api/sign-in", email: email, password: "wrong password")
       end
     end
   end

@@ -42,6 +42,24 @@ headers = {
 }
 ```
 
+## Systemd daemon
+
+```sh
+[Unit]
+Description="Habits Hero API"
+After=network.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/user/habit_hero_api_folder
+Enviroment=.env
+ExecStart=/bin/bash -c 'PATH=/home/user/.asdf/shims:$PATH && ./start.sh >> ../logs/habit_hero_api.log'
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+
 ## Editing
 
 To create a new schema with endpoints run `mix phx.gen.json Accounts User users name:string age:integer` changing <Accounts> <User> <users> [more info](https://hexdocs.pm/phoenix/Mix.Tasks.Phx.Gen.Json.html)
