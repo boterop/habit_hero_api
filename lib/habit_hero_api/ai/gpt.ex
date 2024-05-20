@@ -18,8 +18,8 @@ defmodule HabitHeroApi.AI.GPT do
 
   """
   @spec ask(String.t()) :: response()
-  def ask(prompt) do
-    agent_prompt = System.get_env("AGENT_PROMPT")
+  def ask(prompt, language \\ "en") do
+    agent_prompt = "AGENT_PROMPT" |> System.get_env() |> String.replace("{LANGUAGE}", language)
 
     chat =
       Chat.Completions.new(
