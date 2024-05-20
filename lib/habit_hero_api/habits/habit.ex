@@ -32,7 +32,7 @@ defmodule HabitHeroApi.Habits.Habit do
   end
 
   @doc false
-  @optionals ~w[done_image]a
+  @optionals ~w[done_image difficulty]a
   @required ~w[name description type order_index notification_date notify end_date done_today times_done status user_id]a
   def changeset(habit, attrs) do
     mix_env = "MIX_ENV" |> System.get_env() |> String.to_atom()
