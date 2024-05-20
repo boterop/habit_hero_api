@@ -12,7 +12,11 @@ defmodule HabitHeroApiWeb.HabitController do
   end
 
   def create(conn, %{"habit" => habit_params}) do
-    with {:ok, %Habit{} = habit} <- Habits.create_habit(habit_params) do
+    language = get_req_header(conn, "language")
+
+    language = if language == [], do: "en", else: language |> List.first()
+
+    with {:ok, %Habit{} = habit} <- Habits.create_habit(habit_params, language) do
       conn
       |> put_status(:created)
       |> put_resp_header("location", ~p"/api/habits/#{habit}")

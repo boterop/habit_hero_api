@@ -34,7 +34,7 @@ defmodule HabitHeroApi.Habits.Habit do
   @doc false
   @optionals ~w[done_image difficulty]a
   @required ~w[name description type order_index notification_date notify end_date done_today times_done status user_id]a
-  def changeset(habit, attrs) do
+  def changeset(habit, attrs, language \\ "en") do
     mix_env = "MIX_ENV" |> System.get_env() |> String.to_atom()
 
     id =
@@ -46,16 +46,26 @@ defmodule HabitHeroApi.Habits.Habit do
     habit
     |> cast(attrs, @optionals ++ @required)
     |> validate_required(@required)
-    |> gen_recommendations_and_difficulty(mix_env, id)
+    |> gen_recommendations_and_difficulty(mix_env, language, id)
   end
 
-  @spec gen_recommendations_and_difficulty(Ecto.Changeset.t(), atom(), String.t() | nil) ::
+  @spec gen_recommendations_and_difficulty(
+          Ecto.Changeset.t(),
+          atom(),
+          String.t(),
+          String.t() | nil
+        ) ::
           Ecto.Changeset.t()
-  defp gen_recommendations_and_difficulty(%{errors: [], valid?: true} = changeset, :prod, nil) do
+  defp gen_recommendations_and_difficulty(
+         %{errors: [], valid?: true} = changeset,
+         :prod,
+         language,
+         nil
+       ) do
     changeset
     |> get_prompt()
     |> Jason.encode!()
-    |> GPT.ask()
+    |> GPT.ask(language)
     |> case do
       {:ok, gpt_response} ->
         %{
@@ -79,7 +89,7 @@ defmodule HabitHeroApi.Habits.Habit do
     end
   end
 
-  defp gen_recommendations_and_difficulty(changeset, _mix_env, _id), do: changeset
+  defp gen_recommendations_and_difficulty(changeset, _mix_env, _language, _id), do: changeset
 
   defp get_prompt(%{changes: %{name: name, description: description, type: type}}) do
     %{name: name, description: description, type: type}

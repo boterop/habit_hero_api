@@ -64,9 +64,9 @@ defmodule HabitHeroApi.Habits do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_habit(attrs \\ %{}) do
+  def create_habit(attrs \\ %{}, language \\ "en") do
     %Habit{}
-    |> Habit.changeset(attrs)
+    |> Habit.changeset(attrs, language)
     |> Repo.insert()
   end
 
