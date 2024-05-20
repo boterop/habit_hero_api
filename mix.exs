@@ -62,7 +62,8 @@ defmodule HabitHeroApi.MixProject do
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.18.1", only: :test},
-      {:mock, "~> 0.3.8", only: :test}
+      {:mock, "~> 0.3.8", only: :test},
+      {:openai_ex, "~> 0.6.4"}
     ]
   end
 

@@ -5,6 +5,7 @@ defmodule HabitHeroApi.Habits.Habit do
 
   use Ecto.Schema
   import Ecto.Changeset
+  alias HabitHeroApi.AI.GPT
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -21,6 +22,10 @@ defmodule HabitHeroApi.Habits.Habit do
     field :status, Ecto.Enum, values: [:done, :canceled, :in_progress], default: :in_progress
     field :times_done, :integer, default: 0
     field :type, Ecto.Enum, values: [:good, :bad]
+    field :obvious, :string
+    field :attractive, :string
+    field :easy, :string
+    field :satisfying, :string
     field :user_id, :binary_id
 
     timestamps(type: :utc_datetime)
@@ -28,10 +33,44 @@ defmodule HabitHeroApi.Habits.Habit do
 
   @doc false
   @optionals ~w[done_image]a
-  @required ~w[name description difficulty type order_index notification_date notify end_date done_today times_done status user_id]a
+  @required ~w[name description type order_index notification_date notify end_date done_today times_done status user_id]a
   def changeset(habit, attrs) do
     habit
     |> cast(attrs, @optionals ++ @required)
     |> validate_required(@required)
+    |> gen_recommendations_and_difficulty()
+  end
+
+  defp gen_recommendations_and_difficulty(%{errors: [], valid?: true} = changeset) do
+    changeset
+    |> get_prompt()
+    |> Jason.encode!()
+    |> GPT.ask()
+    |> case do
+      {:ok,
+       %{
+         "difficulty" => difficulty,
+         "obvious" => obvious,
+         "attractive" => attractive,
+         "easy" => easy,
+         "satisfying" => satisfying
+       }} ->
+        changeset
+        |> put_change(:difficulty, String.to_atom(difficulty))
+        |> put_change(:obvious, obvious)
+        |> put_change(:attractive, attractive)
+        |> put_change(:easy, easy)
+        |> put_change(:satisfying, satisfying)
+
+      {:error, error} ->
+        changeset
+        |> add_error(:base, error)
+    end
+  end
+
+  defp gen_recommendations_and_difficulty(changeset), do: changeset
+
+  defp get_prompt(%{changes: %{name: name, description: description, type: type}}) do
+    %{name: name, description: description, type: type}
   end
 end

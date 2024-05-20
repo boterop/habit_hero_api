@@ -26,7 +26,7 @@ After [setting up the project](#set-up) you'll need to create an Api-Key, run in
 Bcrypt.hash_pwd_salt("api password")
 ```
 
-use the hash in API_KEY into .env and password token in the header Api-Key
+use the hash in API_KEY into .env and password in the header Api-Key
 e.g.
 
 ```elixir
@@ -34,7 +34,7 @@ e.g.
 export API_KEY='$2b$12$fyG7UK5rZ4Xi6JZ9n43AZuuyU8NBpxJ8Px5WZGhluH0YIgnWu/t92'
 
 # Request
-headers = %{"Api-Key": "Bearer #{result_token}"}
+headers = %{"Api-Key": "Bearer api password"}
 ```
 
 For user tokens into Authorization
