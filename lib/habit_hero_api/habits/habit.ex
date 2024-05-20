@@ -48,14 +48,15 @@ defmodule HabitHeroApi.Habits.Habit do
     |> Jason.encode!()
     |> GPT.ask()
     |> case do
-      {:ok,
-       %{
-         "difficulty" => difficulty,
-         "obvious" => obvious,
-         "attractive" => attractive,
-         "easy" => easy,
-         "satisfying" => satisfying
-       }} ->
+      {:ok, gpt_response} ->
+        %{
+          "difficulty" => difficulty,
+          "obvious" => obvious,
+          "attractive" => attractive,
+          "easy" => easy,
+          "satisfying" => satisfying
+        } = Jason.decode!(gpt_response)
+
         changeset
         |> put_change(:difficulty, String.to_atom(difficulty))
         |> put_change(:obvious, obvious)

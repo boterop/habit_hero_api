@@ -34,7 +34,7 @@ defmodule HabitHeroApi.AI.GPT do
     |> Chat.Completions.create(chat)
     |> case do
       %{"choices" => [%{"message" => %{"content" => content}}]} ->
-        {:ok, Jason.decode!(content)}
+        {:ok, content}
 
       %{"error" => %{"message" => error}} ->
         {:error, error}
