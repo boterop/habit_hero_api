@@ -34,14 +34,15 @@ defmodule HabitHeroApi.Habits.Habit do
   @doc false
   @optionals ~w[done_image]a
   @required ~w[name description type order_index notification_date notify end_date done_today times_done status user_id]a
-  def changeset(habit, attrs) do
+  def changeset(%{id: id} = habit, attrs) do
     habit
     |> cast(attrs, @optionals ++ @required)
     |> validate_required(@required)
-    |> gen_recommendations_and_difficulty()
+    |> gen_recommendations_and_difficulty(id)
   end
 
-  defp gen_recommendations_and_difficulty(%{errors: [], valid?: true} = changeset) do
+  @spec gen_recommendations_and_difficulty(Ecto.Changeset.t(), String.t()) :: Ecto.Changeset.t()
+  defp gen_recommendations_and_difficulty(%{errors: [], valid?: true} = changeset, nil) do
     changeset
     |> get_prompt()
     |> Jason.encode!()
@@ -68,7 +69,7 @@ defmodule HabitHeroApi.Habits.Habit do
     end
   end
 
-  defp gen_recommendations_and_difficulty(changeset), do: changeset
+  defp gen_recommendations_and_difficulty(changeset, _id), do: changeset
 
   defp get_prompt(%{changes: %{name: name, description: description, type: type}}) do
     %{name: name, description: description, type: type}
