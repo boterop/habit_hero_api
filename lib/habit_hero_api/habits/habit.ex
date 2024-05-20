@@ -12,7 +12,7 @@ defmodule HabitHeroApi.Habits.Habit do
   schema "habits" do
     field :name, :string
     field :description, :string
-    field :difficulty, Ecto.Enum, values: [:easy, :medium, :hard]
+    field :difficulty, Ecto.Enum, values: [:easy, :medium, :hard], default: :easy
     field :done_image, :string, default: ""
     field :done_today, :boolean, default: false
     field :end_date, :naive_datetime
@@ -22,10 +22,10 @@ defmodule HabitHeroApi.Habits.Habit do
     field :status, Ecto.Enum, values: [:done, :canceled, :in_progress], default: :in_progress
     field :times_done, :integer, default: 0
     field :type, Ecto.Enum, values: [:good, :bad]
-    field :obvious, :string
-    field :attractive, :string
-    field :easy, :string
-    field :satisfying, :string
+    field :obvious, :string, default: ""
+    field :attractive, :string, default: ""
+    field :easy, :string, default: ""
+    field :satisfying, :string, default: ""
     field :user_id, :binary_id
 
     timestamps(type: :utc_datetime)
@@ -34,15 +34,24 @@ defmodule HabitHeroApi.Habits.Habit do
   @doc false
   @optionals ~w[done_image]a
   @required ~w[name description type order_index notification_date notify end_date done_today times_done status user_id]a
-  def changeset(%{id: id} = habit, attrs) do
+  def changeset(habit, attrs) do
+    mix_env = "MIX_ENV" |> System.get_env() |> String.to_atom()
+
+    id =
+      case habit do
+        %{id: id} -> id
+        _ -> nil
+      end
+
     habit
     |> cast(attrs, @optionals ++ @required)
     |> validate_required(@required)
-    |> gen_recommendations_and_difficulty(id)
+    |> gen_recommendations_and_difficulty(mix_env, id)
   end
 
-  @spec gen_recommendations_and_difficulty(Ecto.Changeset.t(), String.t()) :: Ecto.Changeset.t()
-  defp gen_recommendations_and_difficulty(%{errors: [], valid?: true} = changeset, nil) do
+  @spec gen_recommendations_and_difficulty(Ecto.Changeset.t(), atom(), String.t() | nil) ::
+          Ecto.Changeset.t()
+  defp gen_recommendations_and_difficulty(%{errors: [], valid?: true} = changeset, :prod, nil) do
     changeset
     |> get_prompt()
     |> Jason.encode!()
@@ -70,7 +79,7 @@ defmodule HabitHeroApi.Habits.Habit do
     end
   end
 
-  defp gen_recommendations_and_difficulty(changeset, _id), do: changeset
+  defp gen_recommendations_and_difficulty(changeset, _mix_env, _id), do: changeset
 
   defp get_prompt(%{changes: %{name: name, description: description, type: type}}) do
     %{name: name, description: description, type: type}
