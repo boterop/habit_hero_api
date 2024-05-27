@@ -21,7 +21,7 @@ erl_crash.dump
 
 # Temporary files, for example, from tests.
 /tmp/
-images/
+priv/static/images/
 
 # Ignore package tarball (built via "mix hex.build").
 habit_hero_api-*.tar
