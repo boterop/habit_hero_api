@@ -42,6 +42,8 @@ defmodule HabitHeroApiWeb.Router do
 
   scope "#{@scope}/habits", HabitHeroApiWeb do
     pipe_through [:api, :auth]
+
+    post "/:id/upload-image", HabitController, :upload_image
     resources "/", HabitController
   end
 
