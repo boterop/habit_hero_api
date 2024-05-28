@@ -13,7 +13,7 @@ defmodule Image do
     File.write(path, binary)
   end
 
-  @spec get_image(binary()) :: binary()
+  @spec get_image(binary()) :: {:error, atom()} | {:ok, binary()}
   def get_image(image_name), do: image_name |> get_static_path() |> File.read()
 
   @spec get_image_path(binary()) :: binary()
