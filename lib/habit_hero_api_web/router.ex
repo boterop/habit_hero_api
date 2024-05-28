@@ -42,7 +42,15 @@ defmodule HabitHeroApiWeb.Router do
 
   scope "#{@scope}/habits", HabitHeroApiWeb do
     pipe_through [:api, :auth]
+
+    post "/:id/upload-image", HabitController, :upload_image
     resources "/", HabitController
+  end
+
+  scope "#{@scope}/image", HabitHeroApiWeb do
+    pipe_through :api
+
+    get "/:id", ImageController, :show
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
