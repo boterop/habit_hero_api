@@ -39,7 +39,7 @@ defmodule HabitHeroApi.Account.User do
     if Regex.match?(email_regex, email) do
       changeset
     else
-      add_error(changeset, :email, "is not a valid email")
+      add_error(changeset, :email, "is not valid")
     end
   end
 
