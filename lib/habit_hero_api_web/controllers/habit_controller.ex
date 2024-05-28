@@ -24,6 +24,15 @@ defmodule HabitHeroApiWeb.HabitController do
     end
   end
 
+  def upload_image(conn, %{"id" => id, "base64_image" => image}) do
+    new_habit = %{"done_image" => "image/#{id}"}
+
+    with :ok <- Image.save_base64_image(id, image),
+         {:ok, %Habit{} = habit} <- update(conn, %{"id" => id, "habit" => new_habit}) do
+      render(conn, :show, habit: habit)
+    end
+  end
+
   def show(conn, %{"id" => id}) do
     habit = Habits.get_habit!(id)
     render(conn, :show, habit: habit)
