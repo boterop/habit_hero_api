@@ -26,7 +26,7 @@ defmodule HabitHeroApi.AccountTest do
     end
 
     test "create_user/1 with valid data creates a user" do
-      email = "some email"
+      email = "some_email@mail.com"
       password = "some password"
       valid_attrs = %{email: email, password: password}
 
@@ -39,9 +39,14 @@ defmodule HabitHeroApi.AccountTest do
       assert {:error, %Ecto.Changeset{}} = Account.create_user(@invalid_attrs)
     end
 
+    test "create_user/1 with invalid email returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} =
+               Account.create_user(%{email: "some invalid email", password: "some password"})
+    end
+
     test "update_user/2 with valid data updates the user" do
       user = user_fixture()
-      email = "some updated email"
+      email = "some_updated_email@mail.com"
       password = "some updated password"
       update_attrs = %{email: email, password: password}
 

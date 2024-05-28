@@ -36,10 +36,10 @@ defmodule HabitHeroApi.Account.User do
   defp validate_email(%Ecto.Changeset{valid?: true, changes: %{email: email}} = changeset) do
     email_regex = ~r/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
 
-    if !String.match?(email, email_regex) do
-      add_error(changeset, :email, "is not a valid email")
-    else
+    if Regex.match?(email_regex, email) do
       changeset
+    else
+      add_error(changeset, :email, "is not a valid email")
     end
   end
 
