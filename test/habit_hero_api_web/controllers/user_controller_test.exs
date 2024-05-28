@@ -7,11 +7,11 @@ defmodule HabitHeroApiWeb.UserControllerTest do
   import HabitHeroApi.AccountFixtures
 
   @create_attrs %{
-    email: "some email",
+    email: "some_email@mail.com",
     password: "some password"
   }
   @update_attrs %{
-    email: "some updated email",
+    email: "some_updated_email@mail.com",
     password: "some updated password"
   }
   @invalid_attrs %{email: nil, name: nil, password: nil}
@@ -82,10 +82,12 @@ defmodule HabitHeroApiWeb.UserControllerTest do
         |> put(~p"/api/users/#{user}", user: @update_attrs)
         |> json_response(200)
 
+      %{email: expected_email} = @update_attrs
+
       %{
         "data" => %{
           "id" => ^id,
-          "email" => "some updated email"
+          "email" => ^expected_email
         }
       } =
         conn

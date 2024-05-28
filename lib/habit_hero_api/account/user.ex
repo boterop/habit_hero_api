@@ -23,6 +23,7 @@ defmodule HabitHeroApi.Account.User do
     |> cast(attrs, [:email, :password])
     |> validate_required([:email, :password])
     |> unique_constraint(:email)
+    |> validate_email()
     |> password_to_hash()
   end
 
@@ -31,4 +32,16 @@ defmodule HabitHeroApi.Account.User do
   end
 
   defp password_to_hash(changeset), do: changeset
+
+  defp validate_email(%Ecto.Changeset{valid?: true, changes: %{email: email}} = changeset) do
+    email_regex = ~r/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
+
+    if Regex.match?(email_regex, email) do
+      changeset
+    else
+      add_error(changeset, :email, "is not a valid email")
+    end
+  end
+
+  defp validate_email(changeset), do: changeset
 end

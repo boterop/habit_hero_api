@@ -7,7 +7,7 @@ defmodule HabitHeroApi.AccountFixtures do
   @doc """
   Generate a unique user email.
   """
-  def unique_user_email, do: "some email#{System.unique_integer([:positive])}"
+  def unique_user_email, do: "some_email_#{System.unique_integer([:positive])}@mail.com"
 
   @doc """
   Generate a unique user name.
