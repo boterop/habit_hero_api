@@ -36,6 +36,7 @@ defmodule HabitHeroApiWeb.Router do
     pipe_through [:api, :auth]
 
     get "/:user_id/habits", HabitController, :show_by_user
+    get "/validate", APIController, :health
     resources "/", UserController
   end
 

@@ -23,6 +23,7 @@ defmodule HabitHeroApiWeb.API.Pipeline do
 
   @spec get_api_key(atom()) :: String.t()
   defp get_api_key(:prod), do: System.get_env("API_KEY")
+  defp get_api_key(:dev), do: get_api_key(:prod)
   defp get_api_key(_env), do: System.get_env("TEST_API_KEY")
 
   @spec valid_key?(key :: list(String.t()), api_key :: String.t()) :: boolean()

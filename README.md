@@ -23,14 +23,18 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 After [setting up the project](#set-up) you'll need to create an Api-Key, run into the root folder `iex -S mix phx.server` and then
 
 ```elixir
-HabitHeroApiWeb.API.Guardian.create_token(%{name: "client_name"})
+Bcrypt.hash_pwd_salt("api password")
 ```
 
-use the result token in the header Api-Key
+use the hash in API_KEY into .env and password in the header Api-Key
 e.g.
 
 ```elixir
-headers = %{"Api-Key": "Bearer #{result_token}"}
+# .env
+export API_KEY='$2b$12$fyG7UK5rZ4Xi6JZ9n43AZuuyU8NBpxJ8Px5WZGhluH0YIgnWu/t92'
+
+# Request
+headers = %{"Api-Key": "Bearer api password"}
 ```
 
 For user tokens into Authorization
